@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.diary.backend.mapper.DiaryMapper">
+
+    <resultMap id="DiaryResultMap" type="com.diary.backend.vo.DiaryVO">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="voiceUrl" column="voice_url"/>
+        <result property="emotion" column="emotion"/>
+        <result property="emotionScore" column="emotion_score"/>
+        <result property="writtenDate" column="written_date"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.diary.backend.vo.DiaryVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO diaries (user_id, title, content, voice_url, emotion, emotion_score, written_date)
+        VALUES (#{userId}, #{title}, #{content}, #{voiceUrl}, #{emotion}, #{emotionScore}, #{writtenDate})
+    </insert>
+
+    <select id="findById" resultMap="DiaryResultMap">
+        SELECT * FROM diaries WHERE id = #{id}
+    </select>
+
+    <select id="findByUserId" resultMap="DiaryResultMap">
+        SELECT * FROM diaries
+        WHERE user_id = #{userId}
+        ORDER BY written_date DESC
+    </select>
+
+    <select id="findByUserIdAndDateRange" resultMap="DiaryResultMap">
+        SELECT * FROM diaries
+        WHERE user_id = #{userId}
+          AND written_date BETWEEN #{startDate} AND #{endDate}
+        ORDER BY written_date ASC
+    </select>
+
+    <update id="update" parameterType="com.diary.backend.vo.DiaryVO">
+        UPDATE diaries
+        SET title         = #{title},
+            content       = #{content},
+            voice_url     = #{voiceUrl},
+            emotion       = #{emotion},
+            emotion_score = #{emotionScore},
+            written_date  = #{writtenDate}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM diaries WHERE id = #{id}
+    </delete>
+
+</mapper>
