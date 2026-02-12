@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmotionVO {
+public class RefreshTokenVO {
     private Long id;
-    private Long diaryId;
-    private String emotionTag;
-    private Integer score;
+    private Long memberId;
+    private String token;
+    private LocalDateTime expiresAt;
     private LocalDateTime createdAt;
 }

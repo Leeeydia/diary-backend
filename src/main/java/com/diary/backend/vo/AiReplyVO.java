@@ -11,11 +11,10 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVO {
+public class AiReplyVO {
     private Long id;
-    private String email;
-    private String password;
-    private String nickname;
+    private Long diaryId;
+    private String replyType;
+    private String replyContent;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

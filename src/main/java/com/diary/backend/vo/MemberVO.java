@@ -6,20 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DiaryVO {
+public class MemberVO {
     private Long id;
-    private Long memberId;
-    private String content;
-    private String emotion;
+    private String username;
+    private String password;
+    private String email;
+    private String role;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Boolean isDeleted;
-
-    private List<AiReplyVO> aiReplies;
 }

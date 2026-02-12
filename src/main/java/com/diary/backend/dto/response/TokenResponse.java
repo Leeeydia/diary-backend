@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmotionStatsResponse {
-    private String emotionTag;
-    private int count;
-    private double averageScore;
+public class TokenResponse {
+    private String accessToken;
+    private String refreshToken;
 }

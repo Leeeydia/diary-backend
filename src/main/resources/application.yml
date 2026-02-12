@@ -8,6 +8,16 @@ spring:
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+jwt:
+  secret: ZGlhcnktYXBwLXNlY3JldC1rZXktZm9yLWp3dC10b2tlbg==
+  access-token-expiry: 1800000     # 30 minutes
+  refresh-token-expiry: 604800000  # 7 days
+
+openai:
+  api-key: ${OPENAI_API_KEY:}
+  model: gpt-4o-mini
+  max-tokens: 500
+
 mybatis:
   mapper-locations: classpath:/mappers/**/*.xml
   type-aliases-package: com.diary.backend.vo

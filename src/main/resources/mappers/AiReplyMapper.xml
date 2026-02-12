@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.diary.backend.mapper.AiReplyMapper">
+
+    <resultMap id="AiReplyResultMap" type="com.diary.backend.vo.AiReplyVO">
+        <id property="id" column="id"/>
+        <result property="diaryId" column="diary_id"/>
+        <result property="replyType" column="reply_type"/>
+        <result property="replyContent" column="reply_content"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.diary.backend.vo.AiReplyVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_reply (diary_id, reply_type, reply_content)
+        VALUES (#{diaryId}, #{replyType}, #{replyContent})
+    </insert>
+
+    <select id="findByDiaryId" resultMap="AiReplyResultMap">
+        SELECT * FROM ai_reply WHERE diary_id = #{diaryId} ORDER BY created_at ASC
+    </select>
+
+    <select id="findByDiaryIdAndType" resultMap="AiReplyResultMap">
+        SELECT * FROM ai_reply
+        WHERE diary_id = #{diaryId} AND reply_type = #{replyType}
+    </select>
+
+    <delete id="deleteByDiaryId">
+        DELETE FROM ai_reply WHERE diary_id = #{diaryId}
+    </delete>
+
+</mapper>

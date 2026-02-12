@@ -9,47 +9,59 @@ CREATE DATABASE IF NOT EXISTS diary
 USE diary;
 
 -- --------------------------------------------
--- 1. users
+-- 1. member
 -- --------------------------------------------
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS member (
     id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    email       VARCHAR(100)    NOT NULL UNIQUE,
+    username    VARCHAR(50)     NOT NULL UNIQUE,
     password    VARCHAR(255)    NOT NULL,
-    nickname    VARCHAR(50)     NOT NULL,
+    email       VARCHAR(100)    NOT NULL UNIQUE,
+    role        VARCHAR(20)     DEFAULT 'USER',
     created_at  DATETIME        DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------
--- 2. diaries
+-- 2. refresh_token
 -- --------------------------------------------
-CREATE TABLE IF NOT EXISTS diaries (
-    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    user_id         BIGINT          NOT NULL,
-    title           VARCHAR(200)    NOT NULL,
-    content         TEXT            NOT NULL,
-    voice_url       VARCHAR(500)    NULL,
-    emotion         VARCHAR(50)     NULL,
-    emotion_score   INT             NULL,
-    written_date    DATE            NOT NULL,
-    created_at      DATETIME        DEFAULT CURRENT_TIMESTAMP,
-    updated_at      DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_diary_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE INDEX idx_diary_user_id ON diaries(user_id);
-CREATE INDEX idx_diary_written_date ON diaries(written_date);
-
--- --------------------------------------------
--- 3. emotions (detailed emotion breakdown per diary)
--- --------------------------------------------
-CREATE TABLE IF NOT EXISTS emotions (
+CREATE TABLE IF NOT EXISTS refresh_token (
     id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    diary_id    BIGINT          NOT NULL,
-    emotion_tag VARCHAR(50)     NOT NULL,
-    score       INT             NOT NULL DEFAULT 0,
+    member_id   BIGINT          NOT NULL,
+    token       VARCHAR(500)    NOT NULL,
+    expires_at  DATETIME        NOT NULL,
     created_at  DATETIME        DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_emotion_diary FOREIGN KEY (diary_id) REFERENCES diaries(id) ON DELETE CASCADE
+    CONSTRAINT fk_refresh_token_member FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE INDEX idx_emotion_diary_id ON emotions(diary_id);
+CREATE UNIQUE INDEX idx_refresh_token_member ON refresh_token(member_id);
+CREATE INDEX idx_refresh_token_token ON refresh_token(token);
+
+-- --------------------------------------------
+-- 3. diary
+-- --------------------------------------------
+CREATE TABLE IF NOT EXISTS diary (
+    id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
+    member_id   BIGINT          NOT NULL,
+    content     TEXT            NOT NULL,
+    emotion     VARCHAR(50)     NULL,
+    created_at  DATETIME        DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_deleted  BOOLEAN         DEFAULT FALSE,
+    CONSTRAINT fk_diary_member FOREIGN KEY (member_id) REFERENCES member(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE INDEX idx_diary_member_id ON diary(member_id);
+
+-- --------------------------------------------
+-- 4. ai_reply
+-- --------------------------------------------
+CREATE TABLE IF NOT EXISTS ai_reply (
+    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
+    diary_id        BIGINT          NOT NULL,
+    reply_type      VARCHAR(20)     NOT NULL,
+    reply_content   TEXT            NOT NULL,
+    created_at      DATETIME        DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_ai_reply_diary FOREIGN KEY (diary_id) REFERENCES diary(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE INDEX idx_ai_reply_diary_id ON ai_reply(diary_id);
