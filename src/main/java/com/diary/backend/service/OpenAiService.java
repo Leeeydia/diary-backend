@@ -4,7 +4,7 @@ import com.diary.backend.exception.CustomException;
 import com.diary.backend.exception.ErrorCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Map;
@@ -12,15 +12,15 @@ import java.util.Map;
 @Service
 public class OpenAiService {
 
-    private final WebClient openAiWebClient;
+    private final RestClient openAiRestClient;
     private final String model;
     private final int maxTokens;
 
     public OpenAiService(
-            WebClient openAiWebClient,
+            RestClient openAiRestClient,
             @Value("${openai.model}") String model,
             @Value("${openai.max-tokens}") int maxTokens) {
-        this.openAiWebClient = openAiWebClient;
+        this.openAiRestClient = openAiRestClient;
         this.model = model;
         this.maxTokens = maxTokens;
     }
@@ -39,12 +39,11 @@ public class OpenAiService {
         );
 
         try {
-            Map<String, Object> response = openAiWebClient.post()
+            Map<String, Object> response = openAiRestClient.post()
                     .uri("/chat/completions")
-                    .bodyValue(requestBody)
+                    .body(requestBody)
                     .retrieve()
-                    .bodyToMono(Map.class)
-                    .block();
+                    .body(Map.class);
 
             List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
             Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
