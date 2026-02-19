@@ -1,4 +1,4 @@
-package com.diary.backend.vo;
+package com.diary.backend.aireply;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 public class AiReplyVO {
     private Long id;
     private Long diaryId;
-    private String replyType;
-    private String replyContent;
+    private String reply;
     private LocalDateTime createdAt;
 }

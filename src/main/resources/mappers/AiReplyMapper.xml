@@ -2,28 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.diary.backend.mapper.AiReplyMapper">
+<mapper namespace="com.diary.backend.aireply.AiReplyMapper">
 
-    <resultMap id="AiReplyResultMap" type="com.diary.backend.vo.AiReplyVO">
+    <resultMap id="AiReplyResultMap" type="com.diary.backend.aireply.AiReplyVO">
         <id property="id" column="id"/>
         <result property="diaryId" column="diary_id"/>
-        <result property="replyType" column="reply_type"/>
-        <result property="replyContent" column="reply_content"/>
+        <result property="reply" column="reply"/>
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.diary.backend.vo.AiReplyVO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ai_reply (diary_id, reply_type, reply_content)
-        VALUES (#{diaryId}, #{replyType}, #{replyContent})
+    <insert id="insert" parameterType="com.diary.backend.aireply.AiReplyVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ai_reply (diary_id, reply)
+        VALUES (#{diaryId}, #{reply})
     </insert>
 
     <select id="findByDiaryId" resultMap="AiReplyResultMap">
-        SELECT * FROM ai_reply WHERE diary_id = #{diaryId} ORDER BY created_at ASC
-    </select>
-
-    <select id="findByDiaryIdAndType" resultMap="AiReplyResultMap">
-        SELECT * FROM ai_reply
-        WHERE diary_id = #{diaryId} AND reply_type = #{replyType}
+        SELECT * FROM ai_reply WHERE diary_id = #{diaryId}
     </select>
 
     <delete id="deleteByDiaryId">

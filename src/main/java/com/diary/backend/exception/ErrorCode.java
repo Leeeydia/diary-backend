@@ -17,8 +17,8 @@ public enum ErrorCode {
 
     // ── AI Reply ─────────────────────
     AI_REPLY_NOT_FOUND(404, "AI 답변을 찾을 수 없습니다."),
+    AI_REPLY_ALREADY_EXISTS(409, "이미 AI 답변이 존재합니다."),
     AI_SERVICE_ERROR(500, "AI 서비스 호출 중 오류가 발생했습니다."),
-    INVALID_REPLY_TYPE(400, "유효하지 않은 답변 유형입니다."),
 
     // ── Common ───────────────────────
     INVALID_INPUT(400, "입력값이 올바르지 않습니다."),
