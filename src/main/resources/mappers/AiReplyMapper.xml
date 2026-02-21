@@ -7,21 +7,43 @@
     <resultMap id="AiReplyResultMap" type="com.diary.backend.aireply.AiReplyVO">
         <id property="id" column="id"/>
         <result property="diaryId" column="diary_id"/>
-        <result property="reply" column="reply"/>
+        <result property="replyType" column="reply_type"/>
+        <result property="replyContent" column="reply_content"/>
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.diary.backend.aireply.AiReplyVO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ai_reply (diary_id, reply)
-        VALUES (#{diaryId}, #{reply})
+    <insert id="insert"
+            parameterType="com.diary.backend.aireply.AiReplyVO"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO ai_reply (
+            diary_id,
+            reply_type,
+            reply_content
+        )
+        VALUES (
+                   #{diaryId},
+                   #{replyType},
+                   #{replyContent}
+               )
     </insert>
 
-    <select id="findByDiaryId" resultMap="AiReplyResultMap">
-        SELECT * FROM ai_reply WHERE diary_id = #{diaryId}
+    <select id="findByDiaryId"
+            parameterType="long"
+            resultMap="AiReplyResultMap">
+        SELECT
+            id,
+            diary_id,
+            reply_type,
+            reply_content,
+            created_at
+        FROM ai_reply
+        WHERE diary_id = #{diaryId}
     </select>
 
-    <delete id="deleteByDiaryId">
-        DELETE FROM ai_reply WHERE diary_id = #{diaryId}
+    <delete id="deleteByDiaryId" parameterType="long">
+        DELETE FROM ai_reply
+        WHERE diary_id = #{diaryId}
     </delete>
 
 </mapper>

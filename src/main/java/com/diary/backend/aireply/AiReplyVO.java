@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AiReplyVO {
+
     private Long id;
     private Long diaryId;
-    private String reply;
+    private String replyType;
+    private String replyContent;
     private LocalDateTime createdAt;
 }

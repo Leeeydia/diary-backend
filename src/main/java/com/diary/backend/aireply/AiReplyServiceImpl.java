@@ -19,10 +19,12 @@ public class AiReplyServiceImpl implements AiReplyService {
     @Override
     @Transactional
     public AiReplyCreateResponse generateReply(Long diaryId, Long memberId) {
+
         DiaryVO diary = diaryMapper.findById(diaryId);
         if (diary == null) {
             throw new CustomException(ErrorCode.DIARY_NOT_FOUND);
         }
+
         if (!diary.getMemberId().equals(memberId)) {
             throw new CustomException(ErrorCode.DIARY_ACCESS_DENIED);
         }
@@ -36,7 +38,8 @@ public class AiReplyServiceImpl implements AiReplyService {
 
         AiReplyVO aiReply = AiReplyVO.builder()
                 .diaryId(diaryId)
-                .reply(replyContent)
+                .replyType("PARENT")   // 일단 고정값 (나중에 모드 선택 기능 추가 가능)
+                .replyContent(replyContent)
                 .build();
 
         aiReplyMapper.insert(aiReply);
@@ -44,7 +47,7 @@ public class AiReplyServiceImpl implements AiReplyService {
         return AiReplyCreateResponse.builder()
                 .id(aiReply.getId())
                 .diaryId(aiReply.getDiaryId())
-                .reply(aiReply.getReply())
+                .reply(aiReply.getReplyContent())
                 .createdAt(aiReply.getCreatedAt())
                 .build();
     }

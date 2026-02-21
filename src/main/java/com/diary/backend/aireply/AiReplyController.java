@@ -19,8 +19,12 @@ public class AiReplyController {
     @PostMapping("/{id}/reply")
     public ResultData<AiReplyCreateResponse> generateReply(@PathVariable Long id,
                                                            HttpServletRequest httpRequest) {
+
         Long memberId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_ATTRIBUTE);
-        AiReplyCreateResponse response = aiReplyService.generateReply(id, memberId);
+
+        AiReplyCreateResponse response =
+                aiReplyService.generateReply(id, memberId);
+
         return ResultData.success("AI 답변이 생성되었습니다.", response);
     }
 }
