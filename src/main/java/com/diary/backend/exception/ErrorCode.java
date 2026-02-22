@@ -11,6 +11,10 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(401, "이메일 또는 비밀번호가 올바르지 않습니다."),
     UNAUTHORIZED(401, "로그인이 필요합니다."),
 
+    // ── Member ───────────────────────
+    MEMBER_NOT_FOUND(404, "회원을 찾을 수 없습니다."),
+    INVALID_REPLY_MODE(400, "유효하지 않은 답장 모드입니다. PARENT 또는 TEACHER만 허용됩니다."),
+
     // ── Diary ────────────────────────
     DIARY_NOT_FOUND(404, "일기를 찾을 수 없습니다."),
     DIARY_ACCESS_DENIED(403, "해당 일기에 접근 권한이 없습니다."),

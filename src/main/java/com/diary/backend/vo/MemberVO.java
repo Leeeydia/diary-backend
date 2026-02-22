@@ -17,6 +17,7 @@ public class MemberVO {
     private String password;
     private String email;
     private String role;
+    private String replyMode;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

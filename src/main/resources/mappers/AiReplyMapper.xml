@@ -4,6 +4,7 @@
 
 <mapper namespace="com.diary.backend.aireply.AiReplyMapper">
 
+    <!-- 결과 매핑 -->
     <resultMap id="AiReplyResultMap" type="com.diary.backend.aireply.AiReplyVO">
         <id property="id" column="id"/>
         <result property="diaryId" column="diary_id"/>
@@ -12,10 +13,12 @@
         <result property="createdAt" column="created_at"/>
     </resultMap>
 
+    <!-- insert -->
     <insert id="insert"
             parameterType="com.diary.backend.aireply.AiReplyVO"
             useGeneratedKeys="true"
-            keyProperty="id">
+            keyProperty="id"
+            keyColumn="id">
         INSERT INTO ai_reply (
             diary_id,
             reply_type,
@@ -28,6 +31,7 @@
                )
     </insert>
 
+    <!-- select -->
     <select id="findByDiaryId"
             parameterType="long"
             resultMap="AiReplyResultMap">
@@ -39,9 +43,12 @@
             created_at
         FROM ai_reply
         WHERE diary_id = #{diaryId}
+            LIMIT 1
     </select>
 
-    <delete id="deleteByDiaryId" parameterType="long">
+    <!-- delete -->
+    <delete id="deleteByDiaryId"
+            parameterType="long">
         DELETE FROM ai_reply
         WHERE diary_id = #{diaryId}
     </delete>
