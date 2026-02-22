@@ -53,15 +53,12 @@ CREATE TABLE IF NOT EXISTS diary (
 CREATE INDEX idx_diary_member_id ON diary(member_id);
 
 -- --------------------------------------------
--- 4. ai_reply
+-- 4. ai_reply (1:1 with diary)
 -- --------------------------------------------
 CREATE TABLE IF NOT EXISTS ai_reply (
-    id              BIGINT          AUTO_INCREMENT PRIMARY KEY,
-    diary_id        BIGINT          NOT NULL,
-    reply_type      VARCHAR(20)     NOT NULL,
-    reply_content   TEXT            NOT NULL,
-    created_at      DATETIME        DEFAULT CURRENT_TIMESTAMP,
+    id          BIGINT          AUTO_INCREMENT PRIMARY KEY,
+    diary_id    BIGINT          NOT NULL UNIQUE,
+    reply       TEXT            NOT NULL,
+    created_at  DATETIME        DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_ai_reply_diary FOREIGN KEY (diary_id) REFERENCES diary(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE INDEX idx_ai_reply_diary_id ON ai_reply(diary_id);

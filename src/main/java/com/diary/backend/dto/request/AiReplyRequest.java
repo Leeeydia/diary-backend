@@ -1,8 +1,0 @@
-package com.diary.backend.dto.request;
-
-import lombok.Data;
-
-@Data
-public class AiReplyRequest {
-    private String replyType;
-}

@@ -10,6 +10,7 @@
         <result property="password" column="password"/>
         <result property="email" column="email"/>
         <result property="role" column="role"/>
+        <result property="replyMode" column="reply_mode"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>

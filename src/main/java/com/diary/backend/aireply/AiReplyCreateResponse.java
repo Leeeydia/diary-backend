@@ -1,4 +1,4 @@
-package com.diary.backend.vo;
+package com.diary.backend.aireply;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberVO {
+public class AiReplyCreateResponse {
     private Long id;
-    private String username;
-    private String password;
-    private String email;
-    private String role;
-    private String replyMode;
+    private Long diaryId;
+    private String reply;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
