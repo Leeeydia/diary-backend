@@ -2,22 +2,28 @@ package com.diary.backend.service;
 
 import com.diary.backend.dto.request.DiaryCreateRequest;
 import com.diary.backend.dto.request.DiaryUpdateRequest;
+import com.diary.backend.dto.response.DiaryResponse;
 import com.diary.backend.exception.CustomException;
 import com.diary.backend.exception.ErrorCode;
 import com.diary.backend.mapper.DiaryMapper;
+import com.diary.backend.mapper.MemberMapper;
+import com.diary.backend.vo.MemberVO;
 import com.diary.backend.vo.DiaryVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DiaryService {
 
     private final DiaryMapper diaryMapper;
+    private final MemberMapper memberMapper;
 
-    public DiaryService(DiaryMapper diaryMapper) {
+    public DiaryService(DiaryMapper diaryMapper, MemberMapper memberMapper) {
         this.diaryMapper = diaryMapper;
+        this.memberMapper = memberMapper;
     }
 
     @Transactional
@@ -34,6 +40,22 @@ public class DiaryService {
 
     public List<DiaryVO> getDiariesByMember(Long memberId) {
         return diaryMapper.findByMemberId(memberId);
+    }
+
+    public List<DiaryResponse> getDiaryList(Long memberId) {
+        MemberVO member = memberMapper.findById(memberId);
+        if (member == null) {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        return diaryMapper.findByMemberId(member.getId()).stream()
+                .map(d -> DiaryResponse.builder()
+                        .id(d.getId())
+                        .content(d.getContent())
+                        .emotion(d.getEmotion())
+                        .createdAt(d.getCreatedAt())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public DiaryVO getDiary(Long diaryId, Long memberId) {

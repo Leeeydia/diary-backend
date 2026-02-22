@@ -15,7 +15,7 @@ public class DiaryVO {
     private Long id;
     private Long memberId;
     private String content;
-    private String emotion;
+    private Emotion emotion;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Boolean isDeleted;
