@@ -43,13 +43,15 @@ public class DiaryService {
         return diaryMapper.findByMemberId(memberId);
     }
 
-    public List<DiaryResponse> getDiaryList(Long memberId, Emotion emotion) {
+    public List<DiaryResponse> getDiaryList(Long memberId, Emotion emotion, int page, int size) {
         MemberVO member = memberMapper.findById(memberId);
         if (member == null) {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
-        return diaryMapper.findByMemberIdWithEmotion(member.getId(), emotion).stream()
+        int offset = page * size;
+
+        return diaryMapper.findByMemberIdWithEmotion(member.getId(), emotion, size, offset).stream()
                 .map(d -> DiaryResponse.builder()
                         .id(d.getId())
                         .content(d.getContent())
@@ -71,7 +73,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public DiaryVO updateDiary(Long diaryId, Long memberId, DiaryUpdateRequest request) {
+    public DiaryResponse updateDiary(Long diaryId, Long memberId, DiaryUpdateRequest request) {
         DiaryVO diary = diaryMapper.findById(diaryId);
         if (diary == null) {
             throw new CustomException(ErrorCode.DIARY_NOT_FOUND);
@@ -84,7 +86,14 @@ public class DiaryService {
         diary.setEmotion(request.getEmotion());
 
         diaryMapper.update(diary);
-        return diaryMapper.findById(diaryId);
+
+        DiaryVO updated = diaryMapper.findById(diaryId);
+        return DiaryResponse.builder()
+                .id(updated.getId())
+                .content(updated.getContent())
+                .emotion(updated.getEmotion())
+                .createdAt(updated.getCreatedAt())
+                .build();
     }
 
     @Transactional

@@ -24,10 +24,12 @@ public class DiaryListController {
     @GetMapping
     public ResultData<List<DiaryResponse>> list(
             HttpServletRequest httpRequest,
-            @RequestParam(required = false) Emotion emotion
+            @RequestParam(required = false) Emotion emotion,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
         Long memberId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_ATTRIBUTE);
-        List<DiaryResponse> result = diaryService.getDiaryList(memberId, emotion);
+        List<DiaryResponse> result = diaryService.getDiaryList(memberId, emotion, page, size);
         return ResultData.success(result);
     }
 }
