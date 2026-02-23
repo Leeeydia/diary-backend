@@ -29,6 +29,15 @@
         ORDER BY created_at DESC
     </select>
 
+    <select id="findByMemberIdWithEmotion" resultMap="DiaryResultMap">
+        SELECT * FROM diary
+        WHERE member_id = #{memberId} AND is_deleted = FALSE
+        <if test="emotion != null">
+            AND emotion = #{emotion}
+        </if>
+        ORDER BY created_at DESC
+    </select>
+
     <update id="update" parameterType="com.diary.backend.vo.DiaryVO">
         UPDATE diary
         SET content = #{content},

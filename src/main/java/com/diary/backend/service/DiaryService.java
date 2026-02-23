@@ -7,6 +7,7 @@ import com.diary.backend.exception.CustomException;
 import com.diary.backend.exception.ErrorCode;
 import com.diary.backend.mapper.DiaryMapper;
 import com.diary.backend.mapper.MemberMapper;
+import com.diary.backend.vo.Emotion;
 import com.diary.backend.vo.MemberVO;
 import com.diary.backend.vo.DiaryVO;
 import org.springframework.stereotype.Service;
@@ -42,13 +43,13 @@ public class DiaryService {
         return diaryMapper.findByMemberId(memberId);
     }
 
-    public List<DiaryResponse> getDiaryList(Long memberId) {
+    public List<DiaryResponse> getDiaryList(Long memberId, Emotion emotion) {
         MemberVO member = memberMapper.findById(memberId);
         if (member == null) {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
-        return diaryMapper.findByMemberId(member.getId()).stream()
+        return diaryMapper.findByMemberIdWithEmotion(member.getId(), emotion).stream()
                 .map(d -> DiaryResponse.builder()
                         .id(d.getId())
                         .content(d.getContent())

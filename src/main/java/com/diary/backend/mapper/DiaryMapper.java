@@ -1,6 +1,7 @@
 package com.diary.backend.mapper;
 
 import com.diary.backend.vo.DiaryVO;
+import com.diary.backend.vo.Emotion;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,6 +15,8 @@ public interface DiaryMapper {
     DiaryVO findById(@Param("id") Long id);
 
     List<DiaryVO> findByMemberId(@Param("memberId") Long memberId);
+
+    List<DiaryVO> findByMemberIdWithEmotion(@Param("memberId") Long memberId, @Param("emotion") Emotion emotion);
 
     void update(DiaryVO diary);
 
