@@ -16,7 +16,10 @@ public interface DiaryMapper {
 
     List<DiaryVO> findByMemberId(@Param("memberId") Long memberId);
 
-    List<DiaryVO> findByMemberIdWithEmotion(@Param("memberId") Long memberId, @Param("emotion") Emotion emotion);
+    List<DiaryVO> findByMemberIdWithEmotion(@Param("memberId") Long memberId,
+                                             @Param("emotion") Emotion emotion,
+                                             @Param("size") int size,
+                                             @Param("offset") int offset);
 
     void update(DiaryVO diary);
 
