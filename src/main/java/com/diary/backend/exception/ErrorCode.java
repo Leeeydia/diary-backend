@@ -19,6 +19,10 @@ public enum ErrorCode {
     DIARY_NOT_FOUND(404, "일기를 찾을 수 없습니다."),
     DIARY_ACCESS_DENIED(403, "해당 일기에 접근 권한이 없습니다."),
 
+    // ── Board ────────────────────────
+    BOARD_NOT_FOUND(404, "게시글을 찾을 수 없습니다."),
+    BOARD_ACCESS_DENIED(403, "해당 게시글에 접근 권한이 없습니다."),
+
     // ── AI Reply ─────────────────────
     AI_REPLY_NOT_FOUND(404, "AI 답변을 찾을 수 없습니다."),
     AI_REPLY_ALREADY_EXISTS(409, "이미 AI 답변이 존재합니다."),

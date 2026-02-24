@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.diary.backend.mapper.BoardMapper">
+
+    <resultMap id="BoardResultMap" type="com.diary.backend.vo.BoardVO">
+        <id property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="emotion" column="emotion"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="isDeleted" column="is_deleted"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.diary.backend.vo.BoardVO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO board (member_id, title, content, emotion)
+        VALUES (#{memberId}, #{title}, #{content}, #{emotion})
+    </insert>
+
+    <select id="findById" resultMap="BoardResultMap">
+        SELECT * FROM board WHERE id = #{id} AND is_deleted = FALSE
+    </select>
+
+    <select id="findAllWithEmotion" resultMap="BoardResultMap">
+        SELECT * FROM board
+        WHERE is_deleted = FALSE
+        <if test="emotion != null">
+            AND emotion = #{emotion}
+        </if>
+        ORDER BY created_at DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <update id="update" parameterType="com.diary.backend.vo.BoardVO">
+        UPDATE board
+        SET title      = #{title},
+            content    = #{content},
+            emotion    = #{emotion},
+            updated_at = NOW()
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="softDeleteById">
+        UPDATE board SET is_deleted = TRUE WHERE id = #{id}
+    </update>
+
+</mapper>
