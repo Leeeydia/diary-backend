@@ -7,6 +7,10 @@ spring:
     username: root
     password:
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 
 jwt:
   secret: ZGlhcnktYXBwLXNlY3JldC1rZXktZm9yLWp3dC10b2tlbg==
@@ -17,6 +21,10 @@ openai:
   api-key: ${OPENAI_API_KEY}
   model: gpt-4o-mini
   max-tokens: 120
+
+file:
+  upload:
+    profile-dir: ${user.dir}/uploads/profile
 
 mybatis:
   mapper-locations: classpath:/mappers/**/*.xml
