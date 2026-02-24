@@ -16,4 +16,10 @@ public interface MemberMapper {
     int existsByEmail(@Param("email") String email);
 
     int existsByUsername(@Param("username") String username);
+
+    void updateProfileImage(@Param("id") Long id, @Param("profileImageUrl") String profileImageUrl);
+
+    void updateReplyMode(@Param("id") Long id, @Param("replyMode") String replyMode);
+
+    void updateUsername(@Param("id") Long id, @Param("username") String username);
 }

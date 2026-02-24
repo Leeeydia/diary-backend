@@ -11,6 +11,7 @@
         <result property="email" column="email"/>
         <result property="role" column="role"/>
         <result property="replyMode" column="reply_mode"/>
+        <result property="profileImageUrl" column="profile_image_url"/>
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
@@ -35,5 +36,26 @@
     <select id="existsByUsername" resultType="int">
         SELECT COUNT(*) FROM member WHERE username = #{username}
     </select>
+
+    <update id="updateProfileImage">
+        UPDATE member
+        SET profile_image_url = #{profileImageUrl},
+            updated_at        = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateReplyMode">
+        UPDATE member
+        SET reply_mode = #{replyMode},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateUsername">
+        UPDATE member
+        SET username   = #{username},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
 
 </mapper>
