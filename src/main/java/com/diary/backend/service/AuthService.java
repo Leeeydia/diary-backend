@@ -26,17 +26,24 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public AuthService(MemberMapper memberMapper, RefreshTokenMapper refreshTokenMapper, JwtProvider jwtProvider) {
+    public AuthService(MemberMapper memberMapper,
+                       RefreshTokenMapper refreshTokenMapper,
+                       JwtProvider jwtProvider) {
         this.memberMapper = memberMapper;
         this.refreshTokenMapper = refreshTokenMapper;
         this.passwordEncoder = new BCryptPasswordEncoder();
         this.jwtProvider = jwtProvider;
     }
 
+    // ==============================
+    // 회원가입
+    // ==============================
     public Map<String, Object> register(RegisterRequest request) {
+
         if (memberMapper.existsByEmail(request.getEmail()) > 0) {
             throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
+
         if (memberMapper.existsByUsername(request.getUsername()) > 0) {
             throw new CustomException(ErrorCode.DUPLICATE_USERNAME);
         }
@@ -54,12 +61,19 @@ public class AuthService {
         result.put("id", member.getId());
         result.put("email", member.getEmail());
         result.put("username", member.getUsername());
+
         return result;
     }
 
+    // ==============================
+    // 로그인
+    // ==============================
     public Map<String, Object> login(LoginRequest request) {
-        MemberVO member = memberMapper.findByEmail(request.getEmail());
-        if (member == null || !passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+
+        MemberVO member = memberMapper.findByUsername(request.getUsername());
+
+        if (member == null ||
+                !passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
         }
 
@@ -71,6 +85,7 @@ public class AuthService {
                 .token(refreshToken)
                 .expiresAt(LocalDateTime.now().plusDays(7))
                 .build();
+
         refreshTokenMapper.upsert(tokenVO);
 
         Map<String, Object> result = new HashMap<>();
@@ -79,14 +94,22 @@ public class AuthService {
         result.put("username", member.getUsername());
         result.put("accessToken", accessToken);
         result.put("refreshToken", refreshToken);
+
         return result;
     }
 
+    // ==============================
+    // 로그아웃
+    // ==============================
     public void logout(Long memberId) {
         refreshTokenMapper.deleteByMemberId(memberId);
     }
 
+    // ==============================
+    // 토큰 재발급
+    // ==============================
     public TokenResponse refresh(String refreshToken) {
+
         if (!jwtProvider.validateToken(refreshToken)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
@@ -98,7 +121,8 @@ public class AuthService {
         Long memberId = jwtProvider.getUserIdFromToken(refreshToken);
 
         RefreshTokenVO storedToken = refreshTokenMapper.findByMemberId(memberId);
-        if (storedToken == null || !refreshToken.equals(storedToken.getToken())) {
+        if (storedToken == null ||
+                !refreshToken.equals(storedToken.getToken())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
 
@@ -110,6 +134,7 @@ public class AuthService {
                 .token(newRefreshToken)
                 .expiresAt(LocalDateTime.now().plusDays(7))
                 .build();
+
         refreshTokenMapper.upsert(newTokenVO);
 
         return TokenResponse.builder()
@@ -118,8 +143,13 @@ public class AuthService {
                 .build();
     }
 
+    // ==============================
+    // 현재 사용자 조회
+    // ==============================
     public Map<String, Object> getCurrentUser(Long memberId) {
+
         MemberVO member = memberMapper.findById(memberId);
+
         if (member == null) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
@@ -130,6 +160,7 @@ public class AuthService {
         result.put("username", member.getUsername());
         result.put("role", member.getRole());
         result.put("createdAt", member.getCreatedAt());
+
         return result;
     }
 }

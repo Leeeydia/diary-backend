@@ -9,7 +9,7 @@ public interface MemberMapper {
 
     void insert(MemberVO member);
 
-    MemberVO findByEmail(@Param("email") String email);
+    MemberVO findByUsername(@Param("username") String username);
 
     MemberVO findById(@Param("id") Long id);
 
@@ -17,9 +17,12 @@ public interface MemberMapper {
 
     int existsByUsername(@Param("username") String username);
 
-    void updateProfileImage(@Param("id") Long id, @Param("profileImageUrl") String profileImageUrl);
+    void updateProfileImage(@Param("id") Long id,
+                            @Param("profileImageUrl") String profileImageUrl);
 
-    void updateReplyMode(@Param("id") Long id, @Param("replyMode") String replyMode);
+    void updateReplyMode(@Param("id") Long id,
+                         @Param("replyMode") String replyMode);
 
-    void updateUsername(@Param("id") Long id, @Param("username") String username);
+    void updateUsername(@Param("id") Long id,
+                        @Param("username") String username);
 }
