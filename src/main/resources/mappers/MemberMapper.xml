@@ -4,11 +4,13 @@
 
 <mapper namespace="com.diary.backend.mapper.MemberMapper">
 
+    <!-- ===================== resultMap ===================== -->
     <resultMap id="MemberResultMap" type="com.diary.backend.vo.MemberVO">
         <id property="id" column="id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="email" column="email"/>
+        <result property="nickname" column="nickname"/> <!-- 추가 -->
         <result property="role" column="role"/>
         <result property="replyMode" column="reply_mode"/>
         <result property="profileImageUrl" column="profile_image_url"/>
@@ -16,30 +18,41 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
+    <!-- ===================== 회원가입 ===================== -->
     <insert id="insert"
             parameterType="com.diary.backend.vo.MemberVO"
             useGeneratedKeys="true"
             keyProperty="id">
-        INSERT INTO member (username, password, email, role)
-        VALUES (#{username}, #{password}, #{email}, #{role})
+        INSERT INTO member (username, password, email, nickname, role)
+        VALUES (#{username}, #{password}, #{email}, #{nickname}, #{role})
     </insert>
 
+    <!-- ===================== 조회 ===================== -->
     <select id="findByUsername" resultMap="MemberResultMap">
-        SELECT * FROM member WHERE username = #{username}
+        SELECT *
+        FROM member
+        WHERE username = #{username}
     </select>
 
     <select id="findById" resultMap="MemberResultMap">
-        SELECT * FROM member WHERE id = #{id}
+        SELECT *
+        FROM member
+        WHERE id = #{id}
     </select>
 
     <select id="existsByEmail" resultType="int">
-        SELECT COUNT(*) FROM member WHERE email = #{email}
+        SELECT COUNT(*)
+        FROM member
+        WHERE email = #{email}
     </select>
 
     <select id="existsByUsername" resultType="int">
-        SELECT COUNT(*) FROM member WHERE username = #{username}
+        SELECT COUNT(*)
+        FROM member
+        WHERE username = #{username}
     </select>
 
+    <!-- ===================== 프로필 이미지 수정 ===================== -->
     <update id="updateProfileImage">
         UPDATE member
         SET profile_image_url = #{profileImageUrl},
@@ -47,6 +60,7 @@
         WHERE id = #{id}
     </update>
 
+    <!-- ===================== 답장 모드 수정 ===================== -->
     <update id="updateReplyMode">
         UPDATE member
         SET reply_mode = #{replyMode},
@@ -54,9 +68,10 @@
         WHERE id = #{id}
     </update>
 
-    <update id="updateUsername">
+    <!-- ===================== 닉네임 수정 ===================== -->
+    <update id="updateNickname">
         UPDATE member
-        SET username   = #{username},
+        SET nickname   = #{nickname},
             updated_at = NOW()
         WHERE id = #{id}
     </update>

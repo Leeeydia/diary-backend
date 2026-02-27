@@ -1,7 +1,7 @@
 package com.diary.backend.controller;
 
 import com.diary.backend.dto.request.UpdateReplyModeRequest;
-import com.diary.backend.dto.request.UpdateUsernameRequest;
+import com.diary.backend.dto.request.UpdateNicknameRequest;
 import com.diary.backend.dto.response.MyPageResponse;
 import com.diary.backend.dto.response.ResultData;
 import com.diary.backend.service.MyPageService;
@@ -36,12 +36,12 @@ public class MyPageController {
         return ResponseEntity.ok(ResultData.success("프로필 이미지가 업로드되었습니다.", response));
     }
 
-    @PutMapping("/username")
-    public ResponseEntity<ResultData<MyPageResponse>> updateUsername(
-            @RequestBody UpdateUsernameRequest body,
+    @PutMapping("/nickname")
+    public ResponseEntity<ResultData<MyPageResponse>> updateNickname(
+            @RequestBody UpdateNicknameRequest body,
             HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("userId");
-        MyPageResponse response = myPageService.updateUsername(memberId, body.getUsername());
+        MyPageResponse response = myPageService.updateNickname(memberId, body.getNickname());
         return ResponseEntity.ok(ResultData.success("닉네임이 변경되었습니다.", response));
     }
 

@@ -23,6 +23,6 @@ public interface MemberMapper {
     void updateReplyMode(@Param("id") Long id,
                          @Param("replyMode") String replyMode);
 
-    void updateUsername(@Param("id") Long id,
-                        @Param("username") String username);
+    void updateNickname(@Param("id") Long id,
+                        @Param("nickname") String nickname);
 }

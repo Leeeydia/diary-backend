@@ -66,13 +66,10 @@ public class MyPageService {
         return toResponse(member);
     }
 
-    public MyPageResponse updateUsername(Long memberId, String username) {
-        if (username == null || username.contains(" ")
-                || username.length() < 2 || username.length() > 10) {
+    public MyPageResponse updateNickname(Long memberId, String nickname) {
+        if (nickname == null || nickname.contains(" ")
+                || nickname.length() < 2 || nickname.length() > 10) {
             throw new CustomException(ErrorCode.INVALID_USERNAME);
-        }
-        if (memberMapper.existsByUsername(username) > 0) {
-            throw new CustomException(ErrorCode.DUPLICATE_USERNAME);
         }
 
         MemberVO member = memberMapper.findById(memberId);
@@ -80,8 +77,8 @@ public class MyPageService {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
-        memberMapper.updateUsername(memberId, username);
-        member.setUsername(username);
+        memberMapper.updateNickname(memberId, nickname);
+        member.setNickname(nickname);
         return toResponse(member);
     }
 
@@ -150,6 +147,7 @@ public class MyPageService {
         return MyPageResponse.builder()
                 .id(member.getId())
                 .username(member.getUsername())
+                .nickname(member.getNickname())
                 .email(member.getEmail())
                 .replyMode(member.getReplyMode())
                 .profileImageUrl(member.getProfileImageUrl())
