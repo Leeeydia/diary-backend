@@ -21,4 +21,5 @@ public class MemberVO {
     private String profileImageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String nickname;
 }

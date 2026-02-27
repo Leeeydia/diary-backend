@@ -8,6 +8,7 @@ import lombok.Getter;
 public class MyPageResponse {
     private Long id;
     private String username;
+    private String nickname;
     private String email;
     private String replyMode;
     private String profileImageUrl;

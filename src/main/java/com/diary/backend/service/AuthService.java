@@ -52,6 +52,7 @@ public class AuthService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .nickname(request.getNickname())   // ⭐ 추가
                 .role("USER")
                 .build();
 
@@ -61,6 +62,7 @@ public class AuthService {
         result.put("id", member.getId());
         result.put("email", member.getEmail());
         result.put("username", member.getUsername());
+        result.put("nickname", member.getNickname());  // ⭐ 추가
 
         return result;
     }
