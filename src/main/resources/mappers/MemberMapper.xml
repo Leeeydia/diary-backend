@@ -16,13 +16,16 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.diary.backend.vo.MemberVO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert"
+            parameterType="com.diary.backend.vo.MemberVO"
+            useGeneratedKeys="true"
+            keyProperty="id">
         INSERT INTO member (username, password, email, role)
         VALUES (#{username}, #{password}, #{email}, #{role})
     </insert>
 
-    <select id="findByEmail" resultMap="MemberResultMap">
-        SELECT * FROM member WHERE email = #{email}
+    <select id="findByUsername" resultMap="MemberResultMap">
+        SELECT * FROM member WHERE username = #{username}
     </select>
 
     <select id="findById" resultMap="MemberResultMap">
