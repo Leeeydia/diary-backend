@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class BoardVO {
     private Long id;
     private Long memberId;
+    private String nickname;
     private String title;
     private String content;
     private Emotion emotion;

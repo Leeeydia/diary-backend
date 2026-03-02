@@ -69,6 +69,12 @@ public class BoardService {
         return toResponse(boardMapper.findById(boardId));
     }
 
+    public List<BoardResponse> getMyBoards(Long memberId) {
+        return boardMapper.findByMemberId(memberId).stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void deleteBoard(Long boardId, Long memberId) {
         BoardVO board = boardMapper.findById(boardId);
@@ -85,6 +91,7 @@ public class BoardService {
         return BoardResponse.builder()
                 .id(board.getId())
                 .memberId(board.getMemberId())
+                .nickname(board.getNickname())
                 .title(board.getTitle())
                 .content(board.getContent())
                 .emotion(board.getEmotion())
