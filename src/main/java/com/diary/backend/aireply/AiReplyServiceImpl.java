@@ -77,4 +77,29 @@ public class AiReplyServiceImpl implements AiReplyService {
                 .createdAt(savedReply.getCreatedAt())
                 .build();
     }
+
+    @Override
+    public AiReplyCreateResponse getReply(Long diaryId, Long memberId) {
+
+        DiaryVO diary = diaryMapper.findById(diaryId);
+        if (diary == null) {
+            throw new CustomException(ErrorCode.DIARY_NOT_FOUND);
+        }
+
+        if (!diary.getMemberId().equals(memberId)) {
+            throw new CustomException(ErrorCode.DIARY_ACCESS_DENIED);
+        }
+
+        AiReplyVO aiReply = aiReplyMapper.findByDiaryId(diaryId);
+        if (aiReply == null) {
+            throw new CustomException(ErrorCode.AI_REPLY_NOT_FOUND);
+        }
+
+        return AiReplyCreateResponse.builder()
+                .id(aiReply.getId())
+                .diaryId(aiReply.getDiaryId())
+                .reply(aiReply.getReplyContent())
+                .createdAt(aiReply.getCreatedAt())
+                .build();
+    }
 }
