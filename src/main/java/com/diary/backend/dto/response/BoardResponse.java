@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 public class BoardResponse {
     private Long id;
     private Long memberId;
+    private String nickname;
     private String title;
     private String content;
     private Emotion emotion;

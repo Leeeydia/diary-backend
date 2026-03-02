@@ -7,6 +7,7 @@
     <resultMap id="BoardResultMap" type="com.diary.backend.vo.BoardVO">
         <id property="id" column="id"/>
         <result property="memberId" column="member_id"/>
+        <result property="nickname" column="nickname"/>
         <result property="title" column="title"/>
         <result property="content" column="content"/>
         <result property="emotion" column="emotion"/>
@@ -21,16 +22,25 @@
     </insert>
 
     <select id="findById" resultMap="BoardResultMap">
-        SELECT * FROM board WHERE id = #{id} AND is_deleted = FALSE
+        SELECT b.id, b.member_id, b.title, b.content, b.emotion,
+               b.created_at, b.updated_at, b.is_deleted,
+               m.nickname
+        FROM board b
+        JOIN member m ON b.member_id = m.id
+        WHERE b.id = #{id} AND b.is_deleted = FALSE
     </select>
 
     <select id="findAllWithEmotion" resultMap="BoardResultMap">
-        SELECT * FROM board
-        WHERE is_deleted = FALSE
+        SELECT b.id, b.member_id, b.title, b.content, b.emotion,
+               b.created_at, b.updated_at, b.is_deleted,
+               m.nickname
+        FROM board b
+        JOIN member m ON b.member_id = m.id
+        WHERE b.is_deleted = FALSE
         <if test="emotion != null">
-            AND emotion = #{emotion}
+            AND b.emotion = #{emotion}
         </if>
-        ORDER BY created_at DESC
+        ORDER BY b.created_at DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
 
@@ -42,6 +52,16 @@
             updated_at = NOW()
         WHERE id = #{id} AND is_deleted = FALSE
     </update>
+
+    <select id="findByMemberId" resultMap="BoardResultMap">
+        SELECT b.id, b.member_id, b.title, b.content, b.emotion,
+               b.created_at, b.updated_at, b.is_deleted,
+               m.nickname
+        FROM board b
+        JOIN member m ON b.member_id = m.id
+        WHERE b.member_id = #{memberId} AND b.is_deleted = FALSE
+        ORDER BY b.created_at DESC
+    </select>
 
     <update id="softDeleteById">
         UPDATE board SET is_deleted = TRUE WHERE id = #{id}

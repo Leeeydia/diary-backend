@@ -39,6 +39,13 @@ public class BoardController {
         return ResultData.success(boards);
     }
 
+    @GetMapping("/me")
+    public ResultData<List<BoardResponse>> myBoards(HttpServletRequest httpRequest) {
+        Long memberId = (Long) httpRequest.getAttribute(AuthInterceptor.USER_ID_ATTRIBUTE);
+        List<BoardResponse> boards = boardService.getMyBoards(memberId);
+        return ResultData.success(boards);
+    }
+
     @GetMapping("/{id}")
     public ResultData<BoardResponse> detail(@PathVariable Long id) {
         BoardResponse board = boardService.getBoard(id);

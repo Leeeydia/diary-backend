@@ -18,6 +18,8 @@ public interface BoardMapper {
                                      @Param("size") int size,
                                      @Param("offset") int offset);
 
+    List<BoardVO> findByMemberId(@Param("memberId") Long memberId);
+
     void update(BoardVO board);
 
     void softDeleteById(@Param("id") Long id);
