@@ -27,8 +27,12 @@ public class DiaryService {
         this.memberMapper = memberMapper;
     }
 
+    // ==========================
+    // 생성
+    // ==========================
     @Transactional
-    public DiaryVO createDiary(Long memberId, DiaryCreateRequest request) {
+    public DiaryResponse createDiary(Long memberId, DiaryCreateRequest request) {
+
         DiaryVO diary = DiaryVO.builder()
                 .memberId(memberId)
                 .content(request.getContent())
@@ -36,14 +40,24 @@ public class DiaryService {
                 .build();
 
         diaryMapper.insert(diary);
-        return diaryMapper.findById(diary.getId());
+
+        DiaryVO saved = diaryMapper.findById(diary.getId());
+
+        return toResponse(saved);
     }
 
+    // ==========================
+    // 회원별 목록 조회 (VO 그대로 필요할 때)
+    // ==========================
     public List<DiaryVO> getDiariesByMember(Long memberId) {
         return diaryMapper.findByMemberId(memberId);
     }
 
+    // ==========================
+    // 회원별 목록 조회 (Response 변환)
+    // ==========================
     public List<DiaryResponse> getDiaryList(Long memberId, Emotion emotion, int page, int size) {
+
         MemberVO member = memberMapper.findById(memberId);
         if (member == null) {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
@@ -51,33 +65,43 @@ public class DiaryService {
 
         int offset = page * size;
 
-        return diaryMapper.findByMemberIdWithEmotion(member.getId(), emotion, size, offset).stream()
-                .map(d -> DiaryResponse.builder()
-                        .id(d.getId())
-                        .content(d.getContent())
-                        .emotion(d.getEmotion())
-                        .createdAt(d.getCreatedAt())
-                        .build())
+        return diaryMapper
+                .findByMemberIdWithEmotion(member.getId(), emotion, size, offset)
+                .stream()
+                .map(this::toResponse)
                 .collect(Collectors.toList());
     }
 
-    public DiaryVO getDiary(Long diaryId, Long memberId) {
+    // ==========================
+    // 단건 조회
+    // ==========================
+    public DiaryResponse getDiary(Long diaryId, Long memberId) {
+
         DiaryVO diary = diaryMapper.findById(diaryId);
+
         if (diary == null) {
             throw new CustomException(ErrorCode.DIARY_NOT_FOUND);
         }
+
         if (!diary.getMemberId().equals(memberId)) {
             throw new CustomException(ErrorCode.DIARY_ACCESS_DENIED);
         }
-        return diary;
+
+        return toResponse(diary);
     }
 
+    // ==========================
+    // 수정
+    // ==========================
     @Transactional
     public DiaryResponse updateDiary(Long diaryId, Long memberId, DiaryUpdateRequest request) {
+
         DiaryVO diary = diaryMapper.findById(diaryId);
+
         if (diary == null) {
             throw new CustomException(ErrorCode.DIARY_NOT_FOUND);
         }
+
         if (!diary.getMemberId().equals(memberId)) {
             throw new CustomException(ErrorCode.DIARY_ACCESS_DENIED);
         }
@@ -88,23 +112,39 @@ public class DiaryService {
         diaryMapper.update(diary);
 
         DiaryVO updated = diaryMapper.findById(diaryId);
-        return DiaryResponse.builder()
-                .id(updated.getId())
-                .content(updated.getContent())
-                .emotion(updated.getEmotion())
-                .createdAt(updated.getCreatedAt())
-                .build();
+
+        return toResponse(updated);
     }
 
+    // ==========================
+    // 삭제
+    // ==========================
     @Transactional
     public void deleteDiary(Long diaryId, Long memberId) {
+
         DiaryVO diary = diaryMapper.findById(diaryId);
+
         if (diary == null) {
             throw new CustomException(ErrorCode.DIARY_NOT_FOUND);
         }
+
         if (!diary.getMemberId().equals(memberId)) {
             throw new CustomException(ErrorCode.DIARY_ACCESS_DENIED);
         }
+
         diaryMapper.softDeleteById(diaryId);
+    }
+
+    // ==========================
+    // 공통 변환 메서드 (⭐ 핵심)
+    // ==========================
+    private DiaryResponse toResponse(DiaryVO diary) {
+        return DiaryResponse.builder()
+                .id(diary.getId())
+                .content(diary.getContent())
+                .emotion(diary.getEmotion())
+                .createdAt(diary.getCreatedAt())
+                .nickname(diary.getNickname())   // ✅ 여기 중요
+                .build();
     }
 }
