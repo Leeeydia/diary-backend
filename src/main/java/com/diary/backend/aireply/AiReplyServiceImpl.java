@@ -54,9 +54,10 @@ public class AiReplyServiceImpl implements AiReplyService {
         // 5️⃣ AI 원본 답장 생성
         String replyContent = aiService.generateReply(diary.getContent(), replyMode);
 
-        // 6️⃣ username 치환
+        // 6️⃣ nickname 치환 (null이면 username으로 fallback)
+        String displayName = member.getNickname() != null ? member.getNickname() : member.getUsername();
         String finalReplyContent =
-                replyContent.replace("{username}", member.getUsername());
+                replyContent.replace("{username}", displayName);
 
         // 7️⃣ 저장
         AiReplyVO aiReply = AiReplyVO.builder()
