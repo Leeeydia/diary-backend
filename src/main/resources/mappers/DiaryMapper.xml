@@ -4,6 +4,9 @@
 
 <mapper namespace="com.diary.backend.mapper.DiaryMapper">
 
+    <!-- ============================= -->
+    <!-- ResultMap -->
+    <!-- ============================= -->
     <resultMap id="DiaryResultMap" type="com.diary.backend.vo.DiaryVO">
         <id property="id" column="id"/>
         <result property="memberId" column="member_id"/>
@@ -12,43 +15,84 @@
         <result property="createdAt" column="created_at"/>
         <result property="updatedAt" column="updated_at"/>
         <result property="isDeleted" column="is_deleted"/>
+        <result property="nickname" column="nickname"/> <!-- ✅ 추가 -->
     </resultMap>
 
-    <insert id="insert" parameterType="com.diary.backend.vo.DiaryVO" useGeneratedKeys="true" keyProperty="id">
+
+    <!-- ============================= -->
+    <!-- Insert -->
+    <!-- ============================= -->
+    <insert id="insert"
+            parameterType="com.diary.backend.vo.DiaryVO"
+            useGeneratedKeys="true"
+            keyProperty="id">
         INSERT INTO diary (member_id, content, emotion)
         VALUES (#{memberId}, #{content}, #{emotion})
     </insert>
 
+
+    <!-- ============================= -->
+    <!-- 단건 조회 (닉네임 포함) -->
+    <!-- ============================= -->
     <select id="findById" resultMap="DiaryResultMap">
-        SELECT * FROM diary WHERE id = #{id} AND is_deleted = FALSE
+        SELECT d.*, m.nickname
+        FROM diary d
+                 JOIN member m ON d.member_id = m.id
+        WHERE d.id = #{id}
+          AND d.is_deleted = FALSE
     </select>
 
+
+    <!-- ============================= -->
+    <!-- 회원별 전체 조회 (닉네임 포함) -->
+    <!-- ============================= -->
     <select id="findByMemberId" resultMap="DiaryResultMap">
-        SELECT * FROM diary
-        WHERE member_id = #{memberId} AND is_deleted = FALSE
-        ORDER BY created_at DESC
+        SELECT d.*, m.nickname
+        FROM diary d
+                 JOIN member m ON d.member_id = m.id
+        WHERE d.member_id = #{memberId}
+          AND d.is_deleted = FALSE
+        ORDER BY d.created_at DESC
     </select>
 
+
+    <!-- ============================= -->
+    <!-- 감정 필터 + 페이징 (닉네임 포함) -->
+    <!-- ============================= -->
     <select id="findByMemberIdWithEmotion" resultMap="DiaryResultMap">
-        SELECT * FROM diary
-        WHERE member_id = #{memberId} AND is_deleted = FALSE
+        SELECT d.*, m.nickname
+        FROM diary d
+        JOIN member m ON d.member_id = m.id
+        WHERE d.member_id = #{memberId}
+        AND d.is_deleted = FALSE
         <if test="emotion != null">
-            AND emotion = #{emotion}
+            AND d.emotion = #{emotion}
         </if>
-        ORDER BY created_at DESC
+        ORDER BY d.created_at DESC
         LIMIT #{size} OFFSET #{offset}
     </select>
 
+
+    <!-- ============================= -->
+    <!-- 수정 -->
+    <!-- ============================= -->
     <update id="update" parameterType="com.diary.backend.vo.DiaryVO">
         UPDATE diary
         SET content    = #{content},
             emotion    = #{emotion},
             updated_at = NOW()
-        WHERE id = #{id} AND is_deleted = FALSE
+        WHERE id = #{id}
+          AND is_deleted = FALSE
     </update>
 
+
+    <!-- ============================= -->
+    <!-- 소프트 삭제 -->
+    <!-- ============================= -->
     <update id="softDeleteById">
-        UPDATE diary SET is_deleted = TRUE WHERE id = #{id}
+        UPDATE diary
+        SET is_deleted = TRUE
+        WHERE id = #{id}
     </update>
 
 </mapper>

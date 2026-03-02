@@ -19,4 +19,5 @@ public class DiaryVO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Boolean isDeleted;
+    private String nickname;
 }

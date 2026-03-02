@@ -13,4 +13,5 @@ public class DiaryResponse {
     private String content;
     private Emotion emotion;
     private LocalDateTime createdAt;
+    private String nickname; // ✅ 추가
 }
