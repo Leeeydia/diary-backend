@@ -54,9 +54,10 @@ public class AiReplyServiceImpl implements AiReplyService {
         // 5️⃣ AI 원본 답장 생성
         String replyContent = aiService.generateReply(diary.getContent(), replyMode);
 
-        // 6️⃣ username 치환
+        // 6️⃣ nickname 치환 (null이면 username으로 fallback)
+        String displayName = member.getNickname() != null ? member.getNickname() : member.getUsername();
         String finalReplyContent =
-                replyContent.replace("{username}", member.getUsername());
+                replyContent.replace("{username}", displayName);
 
         // 7️⃣ 저장
         AiReplyVO aiReply = AiReplyVO.builder()
@@ -75,6 +76,31 @@ public class AiReplyServiceImpl implements AiReplyService {
                 .diaryId(savedReply.getDiaryId())
                 .reply(savedReply.getReplyContent())
                 .createdAt(savedReply.getCreatedAt())
+                .build();
+    }
+
+    @Override
+    public AiReplyCreateResponse getReply(Long diaryId, Long memberId) {
+
+        DiaryVO diary = diaryMapper.findById(diaryId);
+        if (diary == null) {
+            throw new CustomException(ErrorCode.DIARY_NOT_FOUND);
+        }
+
+        if (!diary.getMemberId().equals(memberId)) {
+            throw new CustomException(ErrorCode.DIARY_ACCESS_DENIED);
+        }
+
+        AiReplyVO aiReply = aiReplyMapper.findByDiaryId(diaryId);
+        if (aiReply == null) {
+            throw new CustomException(ErrorCode.AI_REPLY_NOT_FOUND);
+        }
+
+        return AiReplyCreateResponse.builder()
+                .id(aiReply.getId())
+                .diaryId(aiReply.getDiaryId())
+                .reply(aiReply.getReplyContent())
+                .createdAt(aiReply.getCreatedAt())
                 .build();
     }
 }
