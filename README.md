@@ -298,22 +298,4 @@ type: 한글 설명
 - 관련 없는 변경은 커밋 분리
 - 여러 파일이 포함되면 파일명 명시
 
----
 
-## ⚠️ 문서 작성 시 참고사항 (추측 표기)
-
-이 README는 다음 자료를 근거로 작성되었습니다.
-
-**확실한 근거:**
-- `build.gradle` (Spring Boot 3.2.5, Java 17, 의존성)
-- `application.yml` (포트, JWT, OpenAI 설정)
-- `schema.sql` (DB 테이블 구조)
-- MyBatis Mapper XML 5종 (기능·리소스 유추)
-- `src/router/index.tsx` (프론트 라우팅)
-
-**추측/미확인 부분 (실제 코드 확인 필요):**
-- API 엔드포인트의 정확한 경로·요청/응답 스펙 (Controller 코드 미확인)
-- 프론트엔드 `package.json` 상의 정확한 라이브러리 버전 및 패키지 매니저
-- `.env.example`의 변수명
-
-추가 정보나 수정이 필요한 부분은 실제 소스를 기준으로 보완해주세요.
